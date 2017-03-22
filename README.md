@@ -1,7 +1,7 @@
 # aws_canary_sensor_capture
 
 This is a terraform module that reaches out to Canary's web API and pulls sensor data for each Canary device associated
- with an account every 15 minutes leveraging AWS Lambda, Cloudwatch events, DynmaoDB, and KMS.
+ with an account every hour leveraging AWS Lambda, Cloudwatch events, DynmaoDB, and KMS.
 
 ## Input variables:
 
