@@ -54,8 +54,8 @@ resource "aws_dynamodb_table" "canary_sensor_data" {
 
 }
 
-resource "aws_iam_role" "canary_lambda_role" {
-  name = "canary_lambda_role"
+resource "aws_iam_role" "canary_sensor_api_capture_role" {
+  name = "canary_sensor_api_capture_role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -74,8 +74,8 @@ EOF
 }
 
 resource "aws_iam_role_policy" "dynamo_db_access" {
-  name = "dynamo_db_access"
-  role = "${aws_iam_role.canary_lambda_role.id}"
+  name = "canary_sensor_api_capture_dynamo_db_access"
+  role = "${aws_iam_role.canary_sensor_api_capture_role.id}"
   policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -98,8 +98,8 @@ EOF
 }
 
 resource "aws_iam_role_policy" "kms_access" {
-  name = "kms_access"
-  role = "${aws_iam_role.canary_lambda_role.id}"
+  name = "canary_sensor_api_capture_kms_access"
+  role = "${aws_iam_role.canary_sensor_api_capture_role.id}"
   policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -118,8 +118,8 @@ EOF
 }
 
 resource "aws_iam_role_policy" "log_access" {
-  name = "log_access"
-  role = "${aws_iam_role.canary_lambda_role.id}"
+  name = "canary_sensor_api_capture_log_access"
+  role = "${aws_iam_role.canary_sensor_api_capture_role.id}"
   policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -144,22 +144,22 @@ resource "aws_iam_role_policy" "log_access" {
 EOF
 }
 
-resource "aws_cloudwatch_event_rule" "execute_lamba_every_fifteen_minutes" {
-  name = "poll_canary_api_every_fifteen_minutes"
-  schedule_expression = "rate(15 minutes)"
+resource "aws_cloudwatch_event_rule" "execute_lamba_hourly" {
+  name = "execute_canary_sensor_api_capture_lamba_hourly"
+  schedule_expression = "rate(1 hours)"
 }
 
-resource "aws_cloudwatch_event_target" "execute_lamba_every_fifteen_minutes" {
-  rule = "${aws_cloudwatch_event_rule.execute_lamba_every_fifteen_minutes.name}"
+resource "aws_cloudwatch_event_target" "execute_lamba_hourly" {
+  rule = "${aws_cloudwatch_event_rule.execute_lamba_hourly.name}"
   arn = "${aws_lambda_function.canary_sensor_api_capture.arn}"
 }
 
-resource "aws_lambda_permission" "execute_lamba_every_fifteen_minutes" {
+resource "aws_lambda_permission" "execute_lamba_hourly" {
   statement_id = "AllowExecutionFromCloudWatch"
   action = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.canary_sensor_api_capture.arn}"
   principal = "events.amazonaws.com"
-  source_arn = "${aws_cloudwatch_event_rule.execute_lamba_every_fifteen_minutes.arn}"
+  source_arn = "${aws_cloudwatch_event_rule.execute_lamba_hourly.arn}"
 }
 
 data "archive_file" "canary_sensor_api_capture_zip" {
@@ -172,7 +172,7 @@ resource "aws_lambda_function" "canary_sensor_api_capture" {
   filename = "./canary_sensor_api_capture.zip"
   description = "A lamba that reaches out to the Canary API used on the Canary website, obtains bearer tokens for communication, gets a list of the devices attached to the account, and fetches the sensor data for those devices."
   function_name = "canary_sensor_api_capture"
-  role = "${aws_iam_role.canary_lambda_role.arn}"
+  role = "${aws_iam_role.canary_sensor_api_capture_role.arn}"
   handler = "canary.lambda_handler"
   source_code_hash = "${data.archive_file.canary_sensor_api_capture_zip.output_base64sha256}"
   runtime = "python2.7"
