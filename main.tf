@@ -173,7 +173,7 @@ resource "aws_lambda_function" "canary_sensor_api_capture" {
   description = "A lamba that reaches out to the Canary API used on the Canary website, obtains bearer tokens for communication, gets a list of the devices attached to the account, and fetches the sensor data for those devices."
   function_name = "canary_sensor_api_capture"
   role = "${aws_iam_role.canary_sensor_api_capture_role.arn}"
-  handler = "canary.lambda_handler"
+  handler = "canary_sensor_api_capture.lambda_handler"
   source_code_hash = "${data.archive_file.canary_sensor_api_capture_zip.output_base64sha256}"
   runtime = "python2.7"
   timeout = 10
