@@ -169,7 +169,7 @@ data "archive_file" "canary_sensor_api_capture_zip" {
 }
 
 resource "aws_lambda_function" "canary_sensor_api_capture" {
-  filename = "./canary_sensor_api_capture.zip"
+  filename = "${path.module}/canary_sensor_api_capture.zip"
   description = "A lamba that reaches out to the Canary API used on the Canary website, obtains bearer tokens for communication, gets a list of the devices attached to the account, and fetches the sensor data for those devices."
   function_name = "canary_sensor_api_capture"
   role = "${aws_iam_role.canary_sensor_api_capture_role.arn}"
