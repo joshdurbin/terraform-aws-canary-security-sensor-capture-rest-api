@@ -1,0 +1,5 @@
+*.iml
+.idea
+./*.tfstate
+.terraform/
+canary_sensor_api_capture.zip
