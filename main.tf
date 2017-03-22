@@ -146,7 +146,7 @@ EOF
 
 resource "aws_cloudwatch_event_rule" "execute_lamba_hourly" {
   name = "execute_canary_sensor_api_capture_lamba_hourly"
-  schedule_expression = "rate(1 hours)"
+  schedule_expression = "rate(1 hour)"
 }
 
 resource "aws_cloudwatch_event_target" "execute_lamba_hourly" {
