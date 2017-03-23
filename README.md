@@ -66,7 +66,7 @@ To encrypt your password with your KMS key, do the following...
 
 The `CiphertextBlob` referenced in the JSON response body should be used as argument #3 in the usage instructions.
 
-##Authors
+## Authors
 
 Created and maintained by [Josh Durbin](https://github.com/joshdurbin).
 
