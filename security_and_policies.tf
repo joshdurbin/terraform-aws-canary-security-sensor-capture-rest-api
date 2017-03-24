@@ -1,3 +1,48 @@
+resource "aws_iam_role" "api_gateway_full_log_access_role" {
+
+  name = "api_gateway_full_log_access_role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "apigateway.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "full_log_access_policy" {
+
+  name = "full_log_access_policy"
+  role = "${aws_iam_role.api_gateway_full_log_access_role.id}"
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:DescribeLogGroups",
+                "logs:DescribeLogStreams",
+                "logs:PutLogEvents",
+                "logs:GetLogEvents",
+                "logs:FilterLogEvents"
+            ],
+            "Resource": "arn:aws:logs:us-west-2:${data.aws_caller_identity.current_identify.account_id}:*"
+        }
+    ]
+}
+EOF
+}
 
 resource "aws_iam_role" "canary_sensor_api_rest_gateway_role" {
 
@@ -35,32 +80,6 @@ resource "aws_iam_role_policy" "dynamo_db_access_rest_gateway" {
             "Resource": [
                 "${aws_dynamodb_table.canary_sensor_data.arn}"
             ]
-        }
-    ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy" "log_access_rest_gateway" {
-
-  name = "log_access_rest_gateway"
-  role = "${aws_iam_role.canary_sensor_api_rest_gateway_role.id}"
-  policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:DescribeLogGroups",
-                "logs:DescribeLogStreams",
-                "logs:PutLogEvents",
-                "logs:GetLogEvents",
-                "logs:FilterLogEvents"
-            ],
-            "Resource": "arn:aws:logs:us-west-2:${data.aws_caller_identity.current_identify.account_id}:*"
         }
     ]
 }
