@@ -88,7 +88,7 @@ EOF
 }
 
 resource "aws_api_gateway_deployment" "canary_sensor_data_api_production_deployment" {
-  depends_on = ["aws_api_gateway_method.get_sensor_by_data_device_id"]
+//  depends_on = ["aws_api_gateway_method.get_sensor_by_data_device_id"]
 
   rest_api_id = "${aws_api_gateway_rest_api.canary_sensor_data_api.id}"
   stage_name  = "production"
