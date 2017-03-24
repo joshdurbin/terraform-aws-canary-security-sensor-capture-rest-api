@@ -1,17 +1,18 @@
 # aws_canary_sensor_capture
 
 This is a terraform module that reaches out to Canary's web API and pulls sensor data for each Canary device associated
- with an account every hour leveraging AWS Lambda, Cloudwatch events, DynmaoDB, and KMS.
+ with an account every hour leveraging AWS Lambda, Cloudwatch events, DynmaoDB, API Gateway, and KMS.
 
 ## Input variables:
 
   * `kms_arn` - The ARN of the AWS KMS Key used for encryption/decryption of your Canary password and the bearer token when they are stored in DynamoDB
   * `canary_username` - Your Canary username (an email address)
   * `canary_encrytped_password` - Your Canary password encrypted with the AWS KMS Key referenced in the argument `kms_arn` (see the sections below on Creating a KMS Key and Usage if unsure)
+  * `number_of_generated_api_keys` - The number of API keys to generate for use against the API
 
 ## Outputs:
 
-None at this time.
+  * `api_keys` - A list of API keys
 
 ## Example:
 
