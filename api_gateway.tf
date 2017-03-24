@@ -1,5 +1,5 @@
 resource "aws_api_gateway_account" "region_wide_api_gateway_settings" {
-  cloudwatch_role_arn = "${aws_iam_role.canary_sensor_api_rest_gateway_role.arn}"
+  cloudwatch_role_arn = "${aws_iam_role.api_gateway_full_log_access_role.arn}"
 }
 
 resource "aws_api_gateway_rest_api" "canary_sensor_data_api" {
