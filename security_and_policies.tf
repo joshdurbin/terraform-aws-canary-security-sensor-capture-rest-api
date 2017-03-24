@@ -41,6 +41,34 @@ resource "aws_iam_role_policy" "dynamo_db_access_rest_gateway" {
 EOF
 }
 
+resource "aws_iam_role_policy" "log_access_rest_gateway" {
+
+  name = "log_access_rest_gateway"
+  role = "${aws_iam_role.canary_sensor_api_rest_gateway_role.id}"
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "logs:CreateLogGroup",
+            "Resource": "arn:aws:logs:us-west-2:${data.aws_caller_identity.current_identify.account_id}:*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:us-west-2:${data.aws_caller_identity.current_identify.account_id}:log-group:/aws/apigateway/canary_sensor_data_api:*"
+            ]
+        }
+    ]
+}
+EOF
+}
+
 resource "aws_iam_role" "canary_sensor_api_capture_role" {
 
   name = "canary_sensor_api_capture_role"

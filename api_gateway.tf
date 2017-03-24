@@ -1,3 +1,12 @@
+resource "aws_api_gateway_account" "region_wide_api_gateway_settings" {
+  cloudwatch_role_arn = "${aws_iam_role.canary_sensor_api_rest_gateway_role.arn}"
+
+  throttle_settings {
+    burst_limit = 20
+    rate_limit = 10
+  }
+}
+
 resource "aws_api_gateway_rest_api" "canary_sensor_data_api" {
 
   name = "canary_sensor_data_api"
