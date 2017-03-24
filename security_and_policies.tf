@@ -51,18 +51,16 @@ resource "aws_iam_role_policy" "log_access_rest_gateway" {
     "Statement": [
         {
             "Effect": "Allow",
-            "Action": "logs:CreateLogGroup",
-            "Resource": "arn:aws:logs:us-west-2:${data.aws_caller_identity.current_identify.account_id}:*"
-        },
-        {
-            "Effect": "Allow",
             "Action": [
+                "logs:CreateLogGroup",
                 "logs:CreateLogStream",
-                "logs:PutLogEvents"
+                "logs:DescribeLogGroups",
+                "logs:DescribeLogStreams",
+                "logs:PutLogEvents",
+                "logs:GetLogEvents",
+                "logs:FilterLogEvents"
             ],
-            "Resource": [
-                "arn:aws:logs:us-west-2:${data.aws_caller_identity.current_identify.account_id}:log-group:/aws/apigateway/canary_sensor_data_api:*"
-            ]
+            "Resource": "arn:aws:logs:us-west-2:${data.aws_caller_identity.current_identify.account_id}:*"
         }
     ]
 }
