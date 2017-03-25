@@ -18,26 +18,26 @@ resource "aws_iam_role" "canary_sensor_api_rest_gateway_role" {
 EOF
 }
 
+data "aws_iam_policy_document" "dynamo_db_access_rest_gateway_document" {
+
+  statement {
+
+    actions = [
+      "dynamodb:Query"
+    ]
+
+    resources = [
+      "${aws_dynamodb_table.canary_sensor_data.arn}"
+    ]
+  }
+
+}
+
 resource "aws_iam_role_policy" "dynamo_db_access_rest_gateway" {
 
   name = "dynamo_db_access_rest_gateway"
   role = "${aws_iam_role.canary_sensor_api_rest_gateway_role.id}"
-  policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "dynamodb:Query"
-            ],
-            "Resource": [
-                "${aws_dynamodb_table.canary_sensor_data.arn}"
-            ]
-        }
-    ]
-}
-EOF
+  policy = "${data.aws_iam_policy_document.dynamo_db_access_rest_gateway_document.json}"
 }
 
 resource "aws_iam_role" "canary_sensor_api_capture_role" {
