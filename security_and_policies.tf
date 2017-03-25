@@ -2,7 +2,7 @@ data "aws_iam_policy_document" "canary_sensor_api_rest_gateway_role_assumed_role
 
   statement {
 
-    actions = "sts:AssumeRole"
+    actions = ["sts:AssumeRole"]
     principals {
 
       type = "service"
