@@ -5,6 +5,8 @@ This is a terraform module that reaches out to Canary's web API and pulls sensor
 
 ## Input variables:
 
+  * `aws_region` - The AWS region for your resources, which defaults to `us-west-2`
+  * `rate_expression` - The AWS Cloudwatch Scheduled Events rate expression, which defaults to `rate(1 hour)`
   * `kms_arn` - The ARN of the AWS KMS Key used for encryption/decryption of your Canary password and the bearer token when they are stored in DynamoDB
   * `canary_username` - Your Canary username (an email address)
   * `canary_encrytped_password` - Your Canary password encrypted with the AWS KMS Key referenced in the argument `kms_arn` (see the sections below on Creating a KMS Key and Usage if unsure)

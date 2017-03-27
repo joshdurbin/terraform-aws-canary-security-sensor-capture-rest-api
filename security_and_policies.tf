@@ -110,7 +110,7 @@ data "aws_iam_policy_document" "log_access" {
     ]
 
     resources = [
-      "arn:aws:logs:us-west-2:${data.aws_caller_identity.current_identify.account_id}:*"
+      "arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current_identify.account_id}:*"
     ]
   }
 
@@ -122,7 +122,7 @@ data "aws_iam_policy_document" "log_access" {
     ]
 
     resources = [
-      "arn:aws:logs:us-west-2:${data.aws_caller_identity.current_identify.account_id}:log-group:/aws/lambda/canary_sensor_api_capture:*"
+      "arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current_identify.account_id}:log-group:/aws/lambda/canary_sensor_api_capture:*"
     ]
   }
 }

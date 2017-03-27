@@ -34,7 +34,7 @@ resource "aws_api_gateway_integration" "get_sensor_by_data_device_id" {
   http_method = "${aws_api_gateway_method.get_sensor_by_data_device_id.http_method}"
   type = "AWS"
   integration_http_method = "POST"
-  uri = "arn:aws:apigateway:us-west-2:dynamodb:action/Query"
+  uri = "arn:aws:apigateway:${var.aws_region}:dynamodb:action/Query"
   credentials = "${aws_iam_role.canary_sensor_api_rest_gateway_role.arn}"
 
   request_templates {
