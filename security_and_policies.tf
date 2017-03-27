@@ -61,7 +61,7 @@ data "aws_iam_policy_document" "dynamo_db_access" {
 
     actions = [
       "dynamodb:GetItem",
-      "dynamodb:Scan",
+      "dynamodb:DeleteItem",
       "dynamodb:PutItem"
     ]
 

@@ -1,5 +1,6 @@
 from __future__ import print_function
 
+import logging
 import base64
 import boto3
 import datetime
@@ -19,16 +20,16 @@ KMS_ARN = os.environ['kmsArn']
 ENCRYPTED_PASSWORD = os.environ['password']
 DECRYPTED_PASSWORD = kmsClient.decrypt(CiphertextBlob=base64.b64decode(ENCRYPTED_PASSWORD))['Plaintext']
 
+logger = logging.getLogger()
+
 def get_meta_information():
 
     meta_information = {}
 
     deserializer = TypeDeserializer()
 
-    # get item for default tenant from dynamodb
     getItemResult = dynamodbClient.get_item(TableName='canary_meta_information', Key={'tenantId':{'S':'default'}})
 
-    # if the item key is not in the result the item does not exist, thus construct it
     if 'Item' not in getItemResult.keys():
 
         bearerToken = get_authentication_token(USERNAME, DECRYPTED_PASSWORD)
@@ -41,7 +42,6 @@ def get_meta_information():
             'devices':{'SS': devices}
         })
 
-    # re-fetch the data so our "object" "creation" remains consistent
     getItemResult = dynamodbClient.get_item(TableName='canary_meta_information', Key={'tenantId':{'S':'default'}})
 
     for key in getItemResult['Item'].keys():
@@ -70,12 +70,28 @@ def get_devices(bearerToken):
     locationsRequest = urllib2.Request('https://my.canary.is/api/locations')
     locationsRequest.add_header('Authorization', bearerAuthorizationTemplate.substitute(token=bearerToken))
 
-    locationsResponse = urllib2.urlopen(locationsRequest)
-    locationsResponseAsJson = json.loads(locationsResponse.read())
+    try:
 
-    for location in locationsResponseAsJson:
-        for device in location['devices']:
-            devices.append(str(device['id']))
+        locationsResponse = urllib2.urlopen(locationsRequest)
+        locationsResponseAsJson = json.loads(locationsResponse.read())
+
+        for location in locationsResponseAsJson:
+            for device in location['devices']:
+                devices.append(str(device['id']))
+
+    except urllib2.HTTPError as e:
+
+        if e.getcode() == 401:
+
+            errorMessageTemplate = Template('Received a $errorCode when attempting to get devices for account Dropping meta data which will refresh on next execution')
+
+            logger.error(errorMessageTemplate.substitute(errorCode=e.getcode()))
+            dynamodbClient.delete_item(TableName='canary_meta_information', Key={'tenantId':{'S':'default'}})
+        else:
+
+            errorMessageTemplate = Template('Received a $errorCode when attempting to get devices for account. The full response is: $errorResponse')
+            logger.error(errorMessageTemplate.substitute(errorCode=e.getcode(),errorResponse=e.read()))
+
 
     return devices
 
@@ -89,11 +105,26 @@ def get_readings_for_device(deviceId, bearerToken):
     deviceReadingsRequest = urllib2.Request(requestTemplate.substitute(deviceId=deviceId))
     deviceReadingsRequest.add_header('Authorization', bearerAuthorizationTemplate.substitute(token=bearerToken))
 
-    deviceReadingsResponse = urllib2.urlopen(deviceReadingsRequest)
-    deviceReadingsResponseAsJson = json.loads(deviceReadingsResponse.read())
+    try:
 
-    for readings in deviceReadingsResponseAsJson:
-        compiledReadings[readings['sensor_type']] = readings['value']
+        deviceReadingsResponse = urllib2.urlopen(deviceReadingsRequest)
+        deviceReadingsResponseAsJson = json.loads(deviceReadingsResponse.read())
+
+        for readings in deviceReadingsResponseAsJson:
+            compiledReadings[readings['sensor_type']] = readings['value']
+
+    except urllib2.HTTPError as e:
+
+        if e.getcode() == 401:
+
+            errorMessageTemplate = Template('Received a $errorCode when attempting to poll sensor readings for device $deviceId. Dropping meta data which will refresh on next execution')
+
+            logger.error(errorMessageTemplate.substitute(deviceId=deviceId,errorCode=e.getcode()))
+            dynamodbClient.delete_item(TableName='canary_meta_information', Key={'tenantId':{'S':'default'}})
+        else:
+
+            errorMessageTemplate = Template('Received a $errorCode when attempting to poll sensor readings for device $deviceId. The full response is: $errorResponse')
+            logger.error(errorMessageTemplate.substitute(deviceId=deviceId,errorCode=e.getcode(),errorResponse=e.read()))
 
     return compiledReadings
 
