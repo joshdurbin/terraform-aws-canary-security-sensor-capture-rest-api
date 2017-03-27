@@ -39,17 +39,7 @@ resource "aws_api_gateway_integration" "get_sensor_by_data_device_id" {
 
   request_templates {
 
-    "application/json" = <<EOF
-{
-    "TableName": "canary_sensor_data",
-    "KeyConditionExpression": "deviceId = :v1",
-    "ExpressionAttributeValues": {
-        ":v1": {
-            "S": "$input.params('deviceId')"
-        }
-    }
-}
-EOF
+    "application/json" = "${file("${path.module}/api_gateway_templates/request---get_sensor_by_data_device_id.json")}"
   }
 }
 

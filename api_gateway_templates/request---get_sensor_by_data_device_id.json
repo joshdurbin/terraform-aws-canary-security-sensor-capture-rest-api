@@ -1,0 +1,9 @@
+{
+  "TableName": "canary_sensor_data",
+  "KeyConditionExpression": "deviceId = :v1",
+  "ExpressionAttributeValues": {
+    ":v1": {
+      "S": "$input.params('deviceId')"
+    }
+  }
+}
