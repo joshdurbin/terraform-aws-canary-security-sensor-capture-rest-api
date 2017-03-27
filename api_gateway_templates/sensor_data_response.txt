@@ -1,0 +1,12 @@
+#set($inputRoot = $input.path('$'))
+{
+    "readings": [
+        #foreach($elem in $inputRoot.Items) {
+            "time": "$elem.time.S",
+            "air_quality": "$elem.air_quality.N",
+            "humidity": "$elem.humidity.N",
+            "temperature": "$elem.temperature.N"
+        }#if($foreach.hasNext),#end
+	#end
+    ]
+}

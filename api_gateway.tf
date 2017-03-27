@@ -39,7 +39,7 @@ resource "aws_api_gateway_integration" "get_sensor_by_data_device_id" {
 
   request_templates {
 
-    "application/json" = "${file("${path.module}/api_gateway_templates/request---get_sensor_by_data_device_id.json")}"
+    "application/json" = "${file("${path.module}/api_gateway_templates/get_sensor_by_data_device_id.json")}"
   }
 }
 
@@ -51,7 +51,7 @@ resource "aws_api_gateway_method_response" "sensor_data_200" {
   status_code = 200
 }
 
-resource "aws_api_gateway_integration_response" "MyDemoIntegrationResponse" {
+resource "aws_api_gateway_integration_response" "sensor_data_response" {
 
   rest_api_id = "${aws_api_gateway_rest_api.canary_sensor_data_api.id}"
   resource_id = "${aws_api_gateway_resource.sensor_data_device_id.id}"
@@ -60,20 +60,7 @@ resource "aws_api_gateway_integration_response" "MyDemoIntegrationResponse" {
 
   response_templates {
 
-    "application/json" = <<EOF
-#set($inputRoot = $input.path('$'))
-{
-    "readings": [
-        #foreach($elem in $inputRoot.Items) {
-            "time": "$elem.time.S",
-            "air_quality": "$elem.air_quality.N",
-            "humidity": "$elem.humidity.N",
-            "temperature": "$elem.temperature.N"
-        }#if($foreach.hasNext),#end
-	#end
-    ]
-}
-EOF
+    "application/json" = "${file("${path.module}/api_gateway_templates/sensor_data_response.txt")}"
   }
 }
 
