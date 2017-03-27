@@ -3,7 +3,7 @@ variable "kms_arn" {
 }
 
 variable "rate_expression" {
-  default = "rate(1 hour)"
+  default = "rate(30 minutes)"
 }
 
 variable "aws_region" {
