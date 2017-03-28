@@ -1,0 +1,9 @@
+{
+  "TableName": "canary_meta_information",
+  "KeyConditionExpression": "tenantId = :v1",
+  "ExpressionAttributeValues": {
+    ":v1": {
+      "S": "default"
+    }
+  }
+}

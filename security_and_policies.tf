@@ -25,7 +25,8 @@ data "aws_iam_policy_document" "dynamo_db_access_rest_gateway" {
     ]
 
     resources = [
-      "${aws_dynamodb_table.canary_sensor_data.arn}"
+      "${aws_dynamodb_table.canary_sensor_data.arn}",
+      "${aws_dynamodb_table.canary_meta_information.arn}"
     ]
   }
 }

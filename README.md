@@ -15,6 +15,7 @@ This is a terraform module that reaches out to Canary's web API and pulls sensor
 ## Outputs:
 
   * `api_keys` - A list of API keys
+  * `api_gateway_endpoint` - The API Gateway endpoint
 
 ## Example:
 
