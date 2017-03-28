@@ -11,6 +11,10 @@ This is a terraform module that reaches out to Canary's web API and pulls sensor
   * `canary_username` - Your Canary username (an email address)
   * `canary_encrytped_password` - Your Canary password encrypted with the AWS KMS Key referenced in the argument `kms_arn` (see the sections below on Creating a KMS Key and Usage if unsure)
   * `number_of_generated_api_keys` - The number of API keys to generate for use against the API, which defaults to `1`
+  
+* `usage_plan_per_user_quota` - The number of requests a given user can make in a single day, which defaults to `250`
+* `usage_plan_rate_limit` - The API request steady-state rate limit, which defaults to `250`
+* `usage_plan_burst_limit` - The API request burst limit, the maximum rate limit over a time ranging from one to a few seconds, depending upon whether the underlying token bucket is at its full capacity, which defaults to `100`
 
 ## Outputs:
 
