@@ -23,7 +23,7 @@ resource "aws_api_gateway_method" "get_devices" {
 resource "aws_api_gateway_integration" "get_devices_request_integration" {
 
   rest_api_id = "${aws_api_gateway_rest_api.canary_sensor_data_api.id}"
-  resource_id = "${aws_api_gateway_resource.device_id.id}"
+  resource_id = "${aws_api_gateway_resource.devices.id}"
   http_method = "${aws_api_gateway_method.get_devices.http_method}"
   type = "AWS"
   integration_http_method = "POST"
@@ -39,7 +39,7 @@ resource "aws_api_gateway_integration" "get_devices_request_integration" {
 resource "aws_api_gateway_method_response" "get_devices_200_response" {
 
   rest_api_id = "${aws_api_gateway_rest_api.canary_sensor_data_api.id}"
-  resource_id = "${aws_api_gateway_resource.device_id.id}"
+  resource_id = "${aws_api_gateway_resource.devices.id}"
   http_method = "${aws_api_gateway_method.get_devices.http_method}"
   status_code = 200
 }
@@ -47,7 +47,7 @@ resource "aws_api_gateway_method_response" "get_devices_200_response" {
 resource "aws_api_gateway_integration_response" "get_devices_response_integration" {
 
   rest_api_id = "${aws_api_gateway_rest_api.canary_sensor_data_api.id}"
-  resource_id = "${aws_api_gateway_resource.device_id.id}"
+  resource_id = "${aws_api_gateway_resource.devices.id}"
   http_method = "${aws_api_gateway_method.get_devices.http_method}"
   status_code = "${aws_api_gateway_method_response.get_devices_200_response.status_code}"
 
@@ -111,6 +111,8 @@ resource "aws_api_gateway_integration_response" "get_by_device_id_response_integ
 }
 
 resource "aws_api_gateway_deployment" "canary_sensor_data_api_production_deployment" {
+
+  depends_on = ["aws_api_gateway_method.get_devices", "aws_api_gateway_method.get_by_device_id"]
 
   rest_api_id = "${aws_api_gateway_rest_api.canary_sensor_data_api.id}"
   stage_name  = "production"
