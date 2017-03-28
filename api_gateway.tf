@@ -129,3 +129,29 @@ resource "aws_api_gateway_api_key" "key" {
     stage_name  = "${aws_api_gateway_deployment.canary_sensor_data_api_production_deployment.stage_name}"
   }
 }
+
+//resource "aws_api_gateway_usage_plan" "canary_sensor_data_api" {
+//  name = "basic-usage-plan"
+//
+//  api_stages {
+//    api_id = "${aws_api_gateway_rest_api.canary_sensor_data_api.id}"
+//    stage = "${aws_api_gateway_deployment.canary_sensor_data_api_production_deployment.stage_name}"
+//  }
+//
+//  quota_settings {
+//
+//    limit = "${var.usage_plan_per_user_quota}"
+//    period = "DAY"
+//  }
+//
+//  throttle_settings {
+//    burst_limit = "${var.usage_plan_burst_limit}"
+//    rate_limit = "${var.usage_plan_rate_limit}"
+//  }
+//}
+//
+//resource "aws_api_gateway_usage_plan_key" "canary_sensor_data_api" {
+//  key_id = "${aws_api_gateway_api_key.key.*.id}"
+//  key_type = "API_KEY"
+//  usage_plan_id = "${aws_api_gateway_usage_plan.canary_sensor_data_api.id}"
+//}
