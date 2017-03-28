@@ -27,6 +27,14 @@ Basic example - In your terraform code add something like this:
       canary_username = "bobsdinner@gmail.com"
       canary_encrytped_password = "..."
     }
+    
+    output "my_canary_api_keys" {
+      value = "${module.canary.api_keys}"
+    }
+    
+    output "my_canary_api_gateway_endpoint" {
+      value = "${module.canary.api_gateway_endpoint}"
+    }
 
 ## Creating KMS Key: 
 
