@@ -1,4 +1,4 @@
 #set($inputRoot = $input.path('$'))
 {
-    "devices": "$inputRoot.Items.devices.SS"
+    "deviceIds": $inputRoot.Items[0].devices.SS
 }
