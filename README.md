@@ -11,11 +11,11 @@ This is a terraform module that reaches out to Canary's web API and pulls sensor
   * `canary_username` - Your Canary username (an email address)
   * `canary_encrytped_password` - Your Canary password encrypted with the AWS KMS Key referenced in the argument `kms_arn` (see the sections below on Creating a KMS Key and Usage if unsure)
   * `number_of_generated_api_keys` - The number of API keys to generate for use against the API, which defaults to `1`
-  * `usage_plan_per_user_quota_offset` - The number of requests subtracted from the given limit in the initial time period.
-  * `usage_plan_per_user_quota` - The maximum number of requests that can be made in a given time period.
-  * `usage_plan_per_user_quota_period` - The time period in which the limit applies. Valid values are DAY, WEEK or MONTH.
-  * `usage_plan_rate_limit` - The API request steady-state rate limit.
-  * `usage_plan_burst_limit` - The API request burst limit, the maximum rate limit over a time ranging from one to a few seconds, depending upon whether the underlying token bucket is at its full capacity.
+  * `usage_plan_per_user_quota_offset` - The number of requests subtracted from the given limit in the initial time period, defaults to `10`
+  * `usage_plan_per_user_quota` - The maximum number of requests that can be made in a given time period, defaults to `25`
+  * `usage_plan_per_user_quota_period` - The time period in which the limit applies. Valid values are DAY, WEEK or MONTH, defaults to `DAY`
+  * `usage_plan_rate_limit` - The API request steady-state rate limit, defaults to `100`
+  * `usage_plan_burst_limit` - The API request burst limit, the maximum rate limit over a time ranging from one to a few seconds, depending upon whether the underlying token bucket is at its full capacity, defaults to `150`
   
 ## Outputs:
 
