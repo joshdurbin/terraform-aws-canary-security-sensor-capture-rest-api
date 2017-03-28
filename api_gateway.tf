@@ -151,7 +151,10 @@ resource "aws_api_gateway_usage_plan" "canary_sensor_data_api" {
 }
 
 resource "aws_api_gateway_usage_plan_key" "canary_sensor_data_api" {
+
+  count = "${var.number_of_generated_api_keys}"
+
   key_id = "${aws_api_gateway_api_key.key.*.id}"
   key_type = "API_KEY"
-  usage_plan_id = "${aws_api_gateway_usage_plan.canary_sensor_data_api.id}"
+  usage_plan_id = "${element(aws_api_gateway_usage_plan.canary_sensor_data_api.id, count.index)}"
 }
