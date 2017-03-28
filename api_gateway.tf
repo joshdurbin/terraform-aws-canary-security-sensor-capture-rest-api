@@ -141,7 +141,8 @@ resource "aws_api_gateway_usage_plan" "canary_sensor_data_api" {
   quota_settings {
 
     limit = "${var.usage_plan_per_user_quota}"
-    period = "DAY"
+    offset = "${var.usage_plan_per_user_quota}"
+    period = "${var.usage_plan_per_user_quota_period}"
   }
 
   throttle_settings {
