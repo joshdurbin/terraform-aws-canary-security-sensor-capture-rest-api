@@ -20,4 +20,5 @@ variable "canary_encrytped_password" {
 
 variable "number_of_generated_api_keys" {
   description = "The number of API keys to generate for use against the API"
+  default = 1
 }
