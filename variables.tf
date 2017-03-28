@@ -25,7 +25,7 @@ variable "number_of_generated_api_keys" {
 
 variable "usage_plan_per_user_quota_offset" {
   description = "The number of requests subtracted from the given limit in the initial time period."
-  default = "10"
+  default = "0"
 }
 
 variable "usage_plan_per_user_quota" {
