@@ -16,7 +16,7 @@ resource "aws_api_gateway_method" "get_devices" {
   rest_api_id = "${aws_api_gateway_rest_api.canary_sensor_data_api.id}"
   resource_id = "${aws_api_gateway_resource.devices.id}"
   http_method = "GET"
-  api_key_required = true
+  api_key_required = "${var.number_of_generated_api_keys > 0 ? true : false}"
   authorization = "NONE"
 }
 
@@ -69,7 +69,7 @@ resource "aws_api_gateway_method" "get_by_device_id" {
   rest_api_id = "${aws_api_gateway_rest_api.canary_sensor_data_api.id}"
   resource_id = "${aws_api_gateway_resource.device_id.id}"
   http_method = "GET"
-  api_key_required = true
+  api_key_required = "${var.number_of_generated_api_keys > 0 ? true : false}"
   authorization = "NONE"
 }
 
@@ -141,7 +141,7 @@ resource "aws_api_gateway_usage_plan" "canary_sensor_data_api" {
   quota_settings {
 
     limit = "${var.usage_plan_per_user_quota}"
-    offset = "${var.usage_plan_per_user_quota}"
+    offset = "${var.usage_plan_per_user_quota_offset}"
     period = "${var.usage_plan_per_user_quota_period}"
   }
 
